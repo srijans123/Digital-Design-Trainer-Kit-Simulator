@@ -4,7 +4,7 @@
 
 <br>
 
-<a href="https://srijans123.github.io/Digital-Design-Trainer-Kit-Simulator/"><img src="Assets/pixel/btn-launch.svg" height="48" alt="Launch simulator"></a>&nbsp;
+<a href="https://srijans123.github.io/Digital-Design-Trainer-Kit-Simulator/simulator.html"><img src="Assets/pixel/btn-launch.svg" height="48" alt="Launch simulator"></a>&nbsp;
 <a href="#quick-start"><img src="Assets/pixel/btn-quick-start.svg" height="48" alt="Quick start"></a>&nbsp;
 <a href="#level-select"><img src="Assets/pixel/btn-level-select.svg" height="48" alt="Level select"></a>
 

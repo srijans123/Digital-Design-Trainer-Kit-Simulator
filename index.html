@@ -223,7 +223,7 @@
 
         <!-- Center Nav Links -->
         <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-xs font-medium text-slate-300">
-          <a href="#showcase"
+          <a href="simulator.html"
             class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">Simulator</a>
           <a href="#xray-inspector"
             class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">74-Series ICs</a>
@@ -247,14 +247,14 @@
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
             </svg>
           </a>
-          <button onclick="launchTrainerKit()"
+          <a href="simulator.html"
             class="inline-flex items-center gap-2 px-4 py-1.5 bg-white hover:bg-slate-100 text-[#050609] text-xs font-semibold rounded-full dd-glow-white transition transform active:scale-95">
             <span>Open Trainer Kit</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6">
               </path>
             </svg>
-          </button>
+          </a>
         </div>
 
       </div>
@@ -297,10 +297,10 @@
 
         <!-- Primary CTA Only -->
         <div class="flex items-center justify-center">
-          <button onclick="launchTrainerKit()"
+          <a href="simulator.html"
             class="px-7 py-2.5 bg-white hover:bg-slate-100 text-[#050609] font-bold text-sm rounded-full dd-glow-white transition transform active:scale-95 flex items-center gap-2 shadow-lg">
             <span>Launch Trainer Kit →</span>
-          </button>
+          </a>
         </div>
       </div>
 
@@ -673,9 +673,7 @@
                   </div>
                 </div>
 
-                <button onclick="launchTrainerKitWithPreset('exp_adder_gates')"
-                  class="w-full py-3 bg-white hover:bg-white text-slate-950 font-bold rounded-xl dd-glow-amber text-xs transition flex items-center justify-center gap-2">
-                  <span>Open Full Adder In Trainer Kit</span>
+                <a href="simulator.html?preset=exp_adder_gates" class="w-full py-3 bg-white hover:bg-white text-slate-950 font-bold rounded-xl dd-glow-amber text-xs transition flex items-center justify-center gap-2 flex items-center justify-center"><span>Open Full Adder In Trainer Kit</span>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                       d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -1131,10 +1129,7 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7400, 7402, 7404, 7408, 7432, 7486</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_gates')"
-                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+              <a href="simulator.html?preset=exp_gates" class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5 flex items-center justify-center"><span>Load in Trainer Kit →</span></a>
             </div>
 
             <!-- Exp 02 -->
@@ -1152,10 +1147,9 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7486, 7408, 7432</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_adder_gates')"
+              <a href="simulator.html?preset=exp_adder_gates"
                 class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+                <span>Load in Trainer Kit →</span></a>
             </div>
 
             <!-- Exp 03 -->
@@ -1173,10 +1167,7 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 74LS83 Dual Mount</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_7483')"
-                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+              <a href="simulator.html?preset=exp_7483" class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5 flex items-center justify-center"><span>Load in Trainer Kit →</span></a>
             </div>
 
             <!-- Exp 04 -->
@@ -1194,10 +1185,7 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 74151, 74155</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_74151_74155')"
-                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+              <a href="simulator.html?preset=exp_74151_74155" class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5 flex items-center justify-center"><span>Load in Trainer Kit →</span></a>
             </div>
 
             <!-- Exp 05 -->
@@ -1215,10 +1203,7 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7474, 7476</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_7474_7476')"
-                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+              <a href="simulator.html?preset=exp_7474_7476" class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5 flex items-center justify-center"><span>Load in Trainer Kit →</span></a>
             </div>
 
             <!-- Exp 06 -->
@@ -1237,10 +1222,7 @@
                 </p>
                 <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7493, 7447</div>
               </div>
-              <button onclick="launchTrainerKitWithPreset('exp_7493_7447')"
-                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
-                <span>Load in Trainer Kit →</span>
-              </button>
+              <a href="simulator.html?preset=exp_7493_7447" class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5 flex items-center justify-center"><span>Load in Trainer Kit →</span></a>
             </div>
 
           </div>
