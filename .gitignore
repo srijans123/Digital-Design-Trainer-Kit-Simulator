@@ -1,0 +1,10 @@
+# Development scratch and inspection files
+scratch/
+
+# Agent skills cache
+.agent/
+.claude/
+
+# OS metadata
+.DS_Store
+Thumbs.db

@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Design Lab Trainer Kit // BITS Pilani Hyderabad (F215)</title>
+
+  <!-- Typography -->
+  <!-- Native Apple System Font Stack (Monochrome, No external font slop) -->
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <style>
+    /* ==========================================================================
+       CSS ISOLATION & DESIGN SYSTEM TOKENS (Scoped to #dd-landing-page)
+       ========================================================================== */
+    :root {
+      --dd-bg-void: #000000;
+      --dd-bg-surface: #09090b;
+      --dd-bg-card: rgba(10, 10, 10, 0.9);
+      --dd-border-subtle: rgba(255, 255, 255, 0.1);
+      --dd-border-glass: rgba(255, 255, 255, 0.15);
+      --dd-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --dd-font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000000 !important;
+      color: #ededed;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .dd-display {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .dd-mono,
+    .mono,
+    code,
+    pre,
+    [class*="mono"] {
+      font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    }
+
+    /* Stardust noise grain overlay */
+    .dd-noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.18;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Radial atmospheric vignette */
+    .dd-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 30%, transparent 40%, rgba(5, 6, 9, 0.85) 90%);
+    }
+
+    /* Glassmorphism primitives */
+    .dd-glass-nav {
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(10, 13, 20, 0.72);
+      border-bottom: 1px solid var(--dd-border-subtle);
+    }
+
+    .dd-glass-card {
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      background: var(--dd-bg-card);
+      border: 1px solid var(--dd-border-glass);
+      border-radius: 20px;
+    }
+
+    .dd-glass-pill {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(18, 24, 38, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dd-glass-pill:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Glow utilities */
+    .dd-glow-amber {
+      box-shadow: 0 0 25px -4px rgba(255, 255, 255, 0.15);
+    }
+
+    .dd-glow-blue {
+      box-shadow: 0 0 25px -4px rgba(255, 255, 255, 0.15);
+    }
+
+    .dd-glow-white {
+      box-shadow: 0 0 25px -4px rgba(255, 255, 255, 0.35);
+    }
+
+    /* 3D Perspective-Tilted Product Window */
+    .dd-perspective-container {
+      perspective: 1200px;
+    }
+
+    .dd-perspective-tilt {
+      transform-style: preserve-3d;
+      transform: rotateX(6deg);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dd-perspective-tilt:hover {
+      transform: rotateX(0deg);
+    }
+
+    /* Subtle pulse animation for wires */
+    @keyframes dd-wire-dash {
+      to {
+        stroke-dashoffset: -32;
+      }
+    }
+
+    .dd-wire-active {
+      stroke-dasharray: 6 4;
+      animation: dd-wire-dash 0.8s linear infinite;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #050609;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+
+<body class="relative min-h-screen">
+
+  <!-- Background Overlays -->
+  <div class="dd-noise-overlay"></div>
+  <div class="dd-vignette"></div>
+
+  <!-- ROOT LANDING PAGE CONTAINER -->
+  <div id="dd-landing-page" class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- ======================================================================
+         FLOATING TRANSLUCENT NAVBAR (56px)
+         ====================================================================== -->
+    <header class="sticky top-0 z-50 w-full dd-glass-nav h-14 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+
+        <!-- Left: DIP-14 IC Chip Mark + Course Code -->
+        <a href="#hero"
+          class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-white rounded-lg p-1">
+          <svg class="w-8 h-8 rounded-lg shadow-md transition-transform group-hover:scale-105" viewBox="0 0 32 32"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="7" fill="#0b0f19" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
+            <rect x="7" y="5" width="18" height="22" rx="2" fill="#151b28" stroke="#334155" stroke-width="1" />
+            <path d="M 13 5 A 3 3 0 0 0 19 5" fill="#0b0f19" stroke="#334155" stroke-width="1" />
+            <line x1="4" y1="9" x2="7" y2="9" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="4" y1="13" x2="7" y2="13" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="4" y1="17" x2="7" y2="17" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="4" y1="21" x2="7" y2="21" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="4" y1="25" x2="7" y2="25" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="25" y1="9" x2="28" y2="9" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="25" y1="13" x2="28" y2="13" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="25" y1="17" x2="28" y2="17" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="25" y1="21" x2="28" y2="21" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="25" y1="25" x2="28" y2="25" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M 12 13 H 15 C 17.5 13 19 14.5 19 16 C 19 17.5 17.5 19 15 19 H 12 Z" stroke="#3b82f6"
+              stroke-width="1.1" fill="none" />
+            <circle cx="20.5" cy="16" r="1" fill="#f59e0b" />
+          </svg>
+          <div class="flex flex-col">
+            <span class="dd-mono text-xs font-bold tracking-wider text-slate-100 flex items-center gap-1.5">
+              DD.KIT <span class="text-neutral-500 font-normal">//</span> BITS F215
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium">Digital Design Trainer</span>
+          </div>
+        </a>
+
+        <!-- Center Nav Links -->
+        <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-xs font-medium text-slate-300">
+          <a href="#showcase"
+            class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">Simulator</a>
+          <a href="#xray-inspector"
+            class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">74-Series ICs</a>
+          <a href="#lab-experiments"
+            class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">F215 Experiments</a>
+          <a href="#waveform-scope"
+            class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">Timing Scope</a>
+          <a href="#workflow" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-slate-800/60 transition">Pinout
+            Docs</a>
+        </nav>
+
+        <!-- Right CTAs -->
+        <div class="flex items-center gap-2.5">
+          <a href="https://www.scribd.com/document/1054436513/Cs-f215-Digital-Design-Handout" target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 rounded-full transition"
+            title="View official BITS Pilani F215 Handout">
+            <span>Course Handout</span>
+            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+          <button onclick="launchTrainerKit()"
+            class="inline-flex items-center gap-2 px-4 py-1.5 bg-white hover:bg-slate-100 text-[#050609] text-xs font-semibold rounded-full dd-glow-white transition transform active:scale-95">
+            <span>Open Trainer Kit</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6">
+              </path>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         HERO SECTION (100vh 16:9 VIEWPORT FIT + ABSTRACT METABALL SCULPTURE)
+         ====================================================================== -->
+    <section id="hero" class="relative w-full overflow-hidden flex flex-col items-center justify-start text-center px-4"
+      style="height: calc(100vh - 56px); max-height: calc(100vh - 56px); position: relative;">
+
+      <!-- Ambient Backdrops -->
+      <div
+        class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-amber-500/10 via-blue-500/10 to-indigo-500/15 rounded-full blur-[110px] pointer-events-none -z-10">
+      </div>
+
+      <!-- Hero Text Container (Z-Index 10 above shader) -->
+      <div class="relative z-10 flex flex-col items-center pt-5 sm:pt-7 max-w-4xl mx-auto">
+        <!-- Top Badge -->
+        <div
+          class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full dd-glass-pill text-[11px] font-medium text-slate-300 mb-3 border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          <span>BITS Pilani Hyderabad Campus • Digital Design F215</span>
+          <span class="text-slate-500">•</span>
+          <span class="dd-mono text-neutral-300">PHY-1002 Standard</span>
+        </div>
+
+        <!-- Centered Display Headline -->
+        <h1 class="dd-display font-semibold tracking-[-0.03em] leading-[1.08] text-white mx-auto mb-3"
+          style="font-size: clamp(2.25rem, 4vw, 3.5rem);">
+          No Prep For DD Lab Compre?<br>We Got You.
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="text-slate-400 mx-auto leading-relaxed mb-5"
+          style="font-size: 0.95rem; max-width: 52ch; line-height: 1.5; color: #94A3B8;">
+          Pin-accurate Digital Design trainer kit for BITS Hyderabad CS, ECE, EEE, and INSTR F215.<br> Drop DIP-14 chips
+          on the breadboard, patch jumper wires, toggle inputs, and inspect timing waveforms in your browser.
+        </p>
+
+        <!-- Primary CTA Only -->
+        <div class="flex items-center justify-center">
+          <button onclick="launchTrainerKit()"
+            class="px-7 py-2.5 bg-white hover:bg-slate-100 text-[#050609] font-bold text-sm rounded-full dd-glow-white transition transform active:scale-95 flex items-center gap-2 shadow-lg">
+            <span>Launch Trainer Kit →</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FULL-BLEED UNCLIPPED ABSTRACT 3D LIQUID-MERCURY METABALL SHADER CANVAS -->
+      <!-- Feathered CSS Mask blends smoothly into #050609 obsidian background with zero circular cut edge -->
+      <canvas id="dd-liquid-shader-canvas" class="absolute inset-0 w-full h-full pointer-events-none"
+        style="z-index: 1;"></canvas>
+
+      <!-- Left Frosted-Glass Telemetry Card (Lower-Left of Sculpture) -->
+      <div
+        class="absolute bottom-4 sm:bottom-6 left-3 sm:left-6 md:left-[max(24px,calc(50%-480px))] dd-glass-card p-3.5 sm:p-4 w-[190px] sm:w-[220px] text-left z-20 shadow-2xl transition-transform hover:-translate-y-1">
+        <div class="flex items-center justify-between text-slate-400 mb-1.5">
+          <span class="text-[9px] font-semibold uppercase tracking-wider text-slate-400">TTL Logic Library</span>
+          <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white text-[10px]">↗</div>
+        </div>
+        <div class="text-xs sm:text-sm font-semibold text-white tracking-tight">Pin-Accurate 74LSxx Series</div>
+        <div class="dd-mono text-[11px] text-neutral-300 mt-0.5 font-medium">24 DIP-14 &amp; DIP-16 Chips</div>
+
+        <!-- Mini DIP-14 interactive chip graphic -->
+        <div
+          class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[9px] text-slate-400 font-mono">
+          <span class="text-slate-500">DIP-14 IC</span>
+          <div class="flex gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-neutral-800"></span>
+          </div>
+          <span class="text-white">VCC / GND</span>
+        </div>
+      </div>
+
+      <!-- Right Frosted-Glass Telemetry Card (Lower-Right of Sculpture) -->
+      <div
+        class="absolute bottom-4 sm:bottom-6 right-3 sm:right-6 md:right-[max(24px,calc(50%-480px))] dd-glass-card p-3.5 sm:p-4 w-[190px] sm:w-[220px] text-left z-20 shadow-2xl transition-transform hover:-translate-y-1">
+        <div class="flex items-center justify-between text-slate-400 mb-1.5">
+          <span class="text-[9px] font-semibold uppercase tracking-wider text-slate-400">Signal Propagation</span>
+          <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white text-[10px]">↗</div>
+        </div>
+        <div class="dd-mono text-xl sm:text-2xl font-bold text-white tracking-tight">9.5 ns</div>
+        <div class="text-[10px] text-slate-400 mt-0.5 leading-snug">Zero-latency Boolean evaluation</div>
+
+        <!-- Sleek progress bar -->
+        <div class="mt-2 pt-1.5 border-t border-white/10">
+          <div class="w-full bg-slate-800 rounded-full h-1 overflow-hidden">
+            <div class="bg-white h-full rounded-full w-full"></div>
+          </div>
+          <div class="flex justify-between items-center text-[9px] dd-mono text-slate-400 mt-1">
+            <span>Syllabus Compliance</span>
+            <span class="text-neutral-300 font-semibold">100% F215 Lab</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         INTERACTIVE FEATURE PILL STRIP (SCREEN MOVIE STYLE)
+         ====================================================================== -->
+    <section class="py-6 border-y border-white/5 bg-slate-950/40">
+      <div class="max-w-7xl mx-auto px-4 overflow-x-auto scrollbar-none">
+        <div class="flex items-center justify-start md:justify-center gap-2.5 min-w-max" id="feature-pill-bar">
+          <button data-feature="breadboard"
+            class="dd-pill-btn active px-4 py-1.5 rounded-full text-xs font-medium border transition">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span> Solderless Breadboard
+          </button>
+          <button data-feature="ttl"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> 74LS00–74LS151 TTL
+          </button>
+          <button data-feature="clock"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Variable Clock Hz
+          </button>
+          <button data-feature="display"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> 7-Segment BCD Display
+          </button>
+          <button data-feature="probe"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Live Logic Probe
+          </button>
+          <button data-feature="truthtable"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Auto Truth Table
+          </button>
+          <button data-feature="morris"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Morris Mano Labs
+          </button>
+          <button data-feature="local"
+            class="dd-pill-btn px-4 py-2 rounded-full dd-glass-pill text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Local First
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3D PERSPECTIVE-TILTED INTERACTIVE PRODUCT WINDOW (DUAL-MODE SWITCHER)
+         ====================================================================== -->
+    <section id="showcase" class="py-16 md:py-28 px-4 relative dd-perspective-container">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="text-center mb-10">
+          <div class="dd-mono text-xs uppercase tracking-wider text-neutral-300 font-semibold mb-2">Workbench Preview
+          </div>
+          <h2 class="dd-display text-3xl sm:text-4xl font-semibold text-white tracking-tight">Test Logic States Right in
+            the Browser Window.</h2>
+          <p class="text-slate-400 text-sm max-w-xl mx-auto mt-2">Flip the switches below to evaluate a wired Half-Adder
+            (74LS86 XOR + 74LS08 AND) and inspect signal paths in real time.</p>
+        </div>
+
+        <!-- Frame with Perspective Tilt -->
+        <div
+          class="dd-perspective-tilt relative rounded-2xl overflow-hidden border border-slate-700/80 bg-[#0d111a] shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8),0_0_40px_-5px_rgba(59,130,246,0.15)]">
+
+          <!-- Luminous gradient rim backdrop -->
+          <div
+            class="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 via-amber-500/20 to-purple-500/20 opacity-40 blur-xl pointer-events-none">
+          </div>
+
+          <!-- macOS Style Window Header & Dual Mode Tabs -->
+          <div
+            class="relative z-10 px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 backdrop-blur">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-neutral-700/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-white/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-neutral-800/80 inline-block"></span>
+              <span class="dd-mono text-[11px] text-slate-400 ml-2 font-medium">PHY-1002 // BENCH SIMULATION</span>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="inline-flex rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs">
+              <button id="tab-btn-interactive" onclick="switchShowcaseTab('interactive')"
+                class="px-3.5 py-1 rounded-md bg-white text-black font-semibold transition shadow-sm">
+                ⚡ Live Half-Adder
+              </button>
+              <button id="tab-btn-video" onclick="switchShowcaseTab('video')"
+                class="px-3.5 py-1 rounded-md text-slate-300 hover:text-white font-medium transition">
+                📹 Hardware Video &amp; Macro
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 1: LIVE PLAYABLE MINI BREADBOARD (HALF-ADDER CIRCUIT) -->
+          <div id="tab-content-interactive"
+            class="relative z-10 p-6 sm:p-8 bg-gradient-to-b from-[#0a0f18] to-[#06090e]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+              <!-- Left: Interactive Circuit Breadboard -->
+              <div
+                class="lg:col-span-7 bg-[#053625] border-2 border-[#d9ead3] rounded-xl p-5 shadow-2xl relative overflow-hidden">
+                <div
+                  class="text-[10px] font-bold text-white/80 tracking-wider mb-4 flex justify-between items-center border-b border-white/20 pb-1.5">
+                  <span class="bg-white text-black px-1.5 py-0.5 rounded font-black">PHYSITECH®</span>
+                  <span class="dd-mono">EXP 02: HALF-ADDER [74LS86 + 74LS08]</span>
+                  <span class="text-neutral-300 font-mono">VCC: +5.0V</span>
+                </div>
+
+                <!-- Switches + ICs + LEDs schematic layout -->
+                <div class="relative py-4 px-2">
+                  <svg id="interactive-wire-svg" class="absolute inset-0 w-full h-full pointer-events-none"
+                    style="z-index: 10;">
+                    <!-- SW1 to XOR Pin 1 -->
+                    <path id="wire-a-xor" d="M 50 45 L 140 45 L 140 70 L 190 70" fill="none" stroke="#ef4444"
+                      stroke-width="2.5" class="dd-wire-active" />
+                    <!-- SW1 to AND Pin 1 -->
+                    <path id="wire-a-and" d="M 50 45 L 140 45 L 140 145 L 190 145" fill="none" stroke="#ef4444"
+                      stroke-width="2.5" class="dd-wire-active" />
+                    <!-- SW0 to XOR Pin 2 -->
+                    <path id="wire-b-xor" d="M 50 115 L 160 115 L 160 85 L 190 85" fill="none" stroke="#3b82f6"
+                      stroke-width="2.5" />
+                    <!-- SW0 to AND Pin 2 -->
+                    <path id="wire-b-and" d="M 50 115 L 160 115 L 160 160 L 190 160" fill="none" stroke="#3b82f6"
+                      stroke-width="2.5" />
+                    <!-- XOR Pin 3 to SUM LED -->
+                    <path id="wire-xor-sum" d="M 310 78 L 380 78 L 380 50 L 410 50" fill="none" stroke="#ef4444"
+                      stroke-width="2.5" class="dd-wire-active" />
+                    <!-- AND Pin 3 to CARRY LED -->
+                    <path id="wire-and-carry" d="M 310 152 L 380 152 L 380 120 L 410 120" fill="none" stroke="#3b82f6"
+                      stroke-width="2.5" />
+                  </svg>
+
+                  <div class="grid grid-cols-3 gap-6 relative z-20 items-center">
+
+                    <!-- Col 1: Toggle Switches -->
+                    <div class="flex flex-col gap-6">
+                      <!-- Switch 1 (Input A) -->
+                      <div
+                        class="bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 flex flex-col items-center relative">
+                        <span class="text-[10px] dd-mono font-bold text-slate-300">SW1 (Input A)</span>
+                        <button id="sw1-btn" onclick="toggleSwitch('sw1')"
+                          class="mt-2 w-10 h-14 bg-slate-800 rounded-md border-2 border-slate-600 flex flex-col items-center justify-between p-1 cursor-pointer transition hover:border-neutral-700">
+                          <span class="text-[9px] dd-mono text-white font-bold">1</span>
+                          <div id="sw1-lever"
+                            class="w-6 h-5 bg-gradient-to-b from-neutral-100 to-neutral-400 rounded shadow-md transform -translate-y-1 transition-transform">
+                          </div>
+                          <span class="text-[9px] dd-mono text-slate-500 font-bold">0</span>
+                        </button>
+                        <div class="flex items-center justify-between w-full mt-1.5 px-1">
+                          <span id="sw1-val" class="dd-mono text-[11px] font-bold text-neutral-300">HIGH (1)</span>
+                          <span id="term-sw1"
+                            class="w-3 h-3 rounded-full bg-white border border-slate-900 shadow-[0_0_6px_#f59e0b] inline-block"
+                            title="Output Socket A"></span>
+                        </div>
+                      </div>
+
+                      <!-- Switch 0 (Input B) -->
+                      <div
+                        class="bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 flex flex-col items-center relative">
+                        <span class="text-[10px] dd-mono font-bold text-slate-300">SW0 (Input B)</span>
+                        <button id="sw0-btn" onclick="toggleSwitch('sw0')"
+                          class="mt-2 w-10 h-14 bg-slate-800 rounded-md border-2 border-slate-600 flex flex-col items-center justify-between p-1 cursor-pointer transition hover:border-neutral-700">
+                          <span class="text-[9px] dd-mono text-slate-500 font-bold">1</span>
+                          <div id="sw0-lever"
+                            class="w-6 h-5 bg-gradient-to-b from-slate-200 to-slate-400 rounded shadow-md transform translate-y-1 transition-transform">
+                          </div>
+                          <span class="text-[9px] dd-mono text-neutral-400 font-bold">0</span>
+                        </button>
+                        <div class="flex items-center justify-between w-full mt-1.5 px-1">
+                          <span id="sw0-val" class="dd-mono text-[11px] font-bold text-neutral-400">LOW (0)</span>
+                          <span id="term-sw0"
+                            class="w-3 h-3 rounded-full bg-neutral-800 border border-slate-900 shadow-[0_0_6px_#3b82f6] inline-block"
+                            title="Output Socket B"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Col 2: DIP-14 IC Chips -->
+                    <div class="flex flex-col gap-6">
+                      <!-- 74LS86 Quad XOR -->
+                      <div id="ic-xor-box"
+                        class="bg-zinc-900 border border-zinc-600 rounded-md p-2.5 shadow-lg text-center font-mono relative">
+                        <div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1">
+                          <span id="term-xor-a"
+                            class="w-2.5 h-2.5 rounded-full bg-white border border-black inline-block"
+                            title="Pin 1: 1A"></span>
+                          <span class="text-zinc-300 font-bold">SN74LS86N</span>
+                          <span id="term-xor-y"
+                            class="w-2.5 h-2.5 rounded-full bg-white border border-black inline-block"
+                            title="Pin 3: 1Y (OUT)"></span>
+                        </div>
+                        <div class="text-xs font-bold text-neutral-300">XOR GATE 1</div>
+                        <div class="flex items-center justify-between text-[9px] text-zinc-400 mt-1">
+                          <span id="term-xor-b"
+                            class="w-2.5 h-2.5 rounded-full bg-neutral-800 border border-black inline-block"
+                            title="Pin 2: 1B"></span>
+                          <span>Y = A ⊕ B</span>
+                          <span class="w-2.5 h-2.5"></span>
+                        </div>
+                      </div>
+
+                      <!-- 74LS08 Quad AND -->
+                      <div id="ic-and-box"
+                        class="bg-zinc-900 border border-zinc-600 rounded-md p-2.5 shadow-lg text-center font-mono relative">
+                        <div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1">
+                          <span id="term-and-a"
+                            class="w-2.5 h-2.5 rounded-full bg-white border border-black inline-block"
+                            title="Pin 1: 1A"></span>
+                          <span class="text-zinc-300 font-bold">SN74LS08N</span>
+                          <span id="term-and-y"
+                            class="w-2.5 h-2.5 rounded-full bg-slate-500 border border-black inline-block"
+                            title="Pin 3: 1Y (OUT)"></span>
+                        </div>
+                        <div class="text-xs font-bold text-neutral-300">AND GATE 1</div>
+                        <div class="flex items-center justify-between text-[9px] text-zinc-400 mt-1">
+                          <span id="term-and-b"
+                            class="w-2.5 h-2.5 rounded-full bg-neutral-800 border border-black inline-block"
+                            title="Pin 2: 1B"></span>
+                          <span>Y = A · B</span>
+                          <span class="w-2.5 h-2.5"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Col 3: Output Indicator LEDs -->
+                    <div class="flex flex-col gap-6">
+                      <!-- SUM LED -->
+                      <div
+                        class="bg-slate-900/90 border border-slate-700 rounded-lg p-3 flex flex-col items-center relative">
+                        <div class="flex items-center justify-between w-full mb-1">
+                          <span id="term-sum-in" class="w-2.5 h-2.5 rounded-full bg-white border border-black"
+                            title="Sum Input Terminal"></span>
+                          <span class="text-[10px] dd-mono font-bold text-slate-300">SUM (A ⊕ B)</span>
+                          <span class="w-2.5 h-2.5"></span>
+                        </div>
+                        <div id="led-sum"
+                          class="mt-1 w-7 h-7 rounded-full bg-gradient-to-br from-red-400 via-red-500 to-red-700 border-2 border-red-300 shadow-[0_0_16px_#ef4444] transition-all">
+                        </div>
+                        <span id="led-sum-val" class="dd-mono text-xs font-bold text-red-400 mt-2">1 (HIGH)</span>
+                      </div>
+
+                      <!-- CARRY LED -->
+                      <div
+                        class="bg-slate-900/90 border border-slate-700 rounded-lg p-3 flex flex-col items-center relative">
+                        <div class="flex items-center justify-between w-full mb-1">
+                          <span id="term-carry-in" class="w-2.5 h-2.5 rounded-full bg-slate-600 border border-black"
+                            title="Carry Input Terminal"></span>
+                          <span class="text-[10px] dd-mono font-bold text-slate-300">CARRY (A · B)</span>
+                          <span class="w-2.5 h-2.5"></span>
+                        </div>
+                        <div id="led-carry"
+                          class="mt-1 w-7 h-7 rounded-full bg-slate-900 border-2 border-slate-700 shadow-none transition-all">
+                        </div>
+                        <span id="led-carry-val" class="dd-mono text-xs font-bold text-slate-500 mt-2">0 (LOW)</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="mt-3 text-center text-[10px] text-white/70 dd-mono">
+                  Click the switches above to update voltage states and observe the real-time gate responses.
+                </div>
+              </div>
+
+              <!-- Right: Live Truth Table + Analysis -->
+              <div class="lg:col-span-5 flex flex-col gap-4 text-left">
+                <div class="dd-glass-card p-5 border border-slate-700">
+                  <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                    <span class="text-xs font-bold text-white uppercase tracking-wider">Live Truth Table</span>
+                    <span class="dd-mono text-[10px] text-neutral-300 bg-white/10 px-2 py-0.5 rounded">F215 Experiment
+                      2</span>
+                  </div>
+
+                  <!-- Truth Table Grid -->
+                  <div class="overflow-hidden rounded-lg border border-slate-800">
+                    <table class="w-full text-xs dd-mono text-center">
+                      <thead class="bg-slate-900 text-slate-400 text-[10px]">
+                        <tr>
+                          <th class="py-2 px-3">SW1 (A)</th>
+                          <th class="py-2 px-3">SW0 (B)</th>
+                          <th class="py-2 px-3 text-neutral-300">SUM (S)</th>
+                          <th class="py-2 px-3 text-neutral-300">CARRY (C)</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                        <tr id="tt-row-0" class="transition-colors">
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3">0</td>
+                        </tr>
+                        <tr id="tt-row-1" class="transition-colors">
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3">1</td>
+                          <td class="py-2 px-3">1</td>
+                          <td class="py-2 px-3">0</td>
+                        </tr>
+                        <tr id="tt-row-2" class="bg-white/20 text-white font-bold transition-colors">
+                          <td class="py-2 px-3">1</td>
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3 text-neutral-300">1</td>
+                          <td class="py-2 px-3">0</td>
+                        </tr>
+                        <tr id="tt-row-3" class="transition-colors">
+                          <td class="py-2 px-3">1</td>
+                          <td class="py-2 px-3">1</td>
+                          <td class="py-2 px-3">0</td>
+                          <td class="py-2 px-3 text-neutral-300">1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">Current Output State:</span>
+                    <span id="active-state-readout" class="dd-mono font-bold text-neutral-300">Sum = 1, Carry = 0</span>
+                  </div>
+                </div>
+
+                <button onclick="launchTrainerKitWithPreset('exp_adder_gates')"
+                  class="w-full py-3 bg-white hover:bg-white text-slate-950 font-bold rounded-xl dd-glow-amber text-xs transition flex items-center justify-center gap-2">
+                  <span>Open Full Adder In Trainer Kit</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 2: VIDEO & HARDWARE SHOWCASE -->
+          <div id="tab-content-video"
+            class="relative z-10 p-6 sm:p-8 bg-gradient-to-b from-[#0a0f18] to-[#06090e] hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+
+              <!-- Video Demo Container -->
+              <div class="rounded-xl overflow-hidden border border-slate-700 bg-black aspect-video relative shadow-2xl">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                  <source src="./Assets/demo-wiring-loop.mp4" type="video/mp4">
+                  <img src="./Assets/trainer-kit-pcb-macro.jpg" alt="Wiring Loop" class="w-full h-full object-cover">
+                </video>
+                <div
+                  class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur px-2.5 py-1 rounded-md text-[10px] dd-mono text-neutral-300 border border-slate-700">
+                  REC // LAB WIRING RUNTIME
+                </div>
+              </div>
+
+              <!-- High Res Macro PCB Inspection -->
+              <div class="flex flex-col gap-4 text-left">
+                <div class="rounded-xl overflow-hidden border border-slate-700 relative group">
+                  <img src="./Assets/trainer-kit-pcb-macro.jpg" alt="Trainer Kit PCB Macro"
+                    class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105">
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
+                    <div>
+                      <div class="text-xs font-bold text-white">Turret Socket &amp; Solderless Rail Array</div>
+                      <div class="text-[11px] text-slate-300">0.8mm brass contact sockets with 5A rating.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dd-glass-card p-4 border border-slate-800 text-xs text-slate-300 space-y-2">
+                  <div class="flex justify-between border-b border-slate-800 pb-1.5">
+                    <span class="text-slate-400">Board Architecture</span>
+                    <span class="font-mono text-white">Dual-board PHY-1002</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-800 pb-1.5">
+                    <span class="text-slate-400">IC Capacity</span>
+                    <span class="font-mono text-white">24 Sockets (DIP-14 / DIP-16)</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-400">Power Rails</span>
+                    <span class="font-mono text-neutral-300">+5V DC, GND Bus</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3-CARD CONTRAST SECTION (SCREEN MOVIE BENCHMARK)
+         "You have a DD lab comprehension test tomorrow."
+         ====================================================================== -->
+    <section class="py-16 md:py-24 px-4 bg-slate-950/60 border-t border-slate-900">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="text-center mb-14">
+          <span class="dd-mono text-xs uppercase tracking-wider text-neutral-300 font-semibold mb-2 block">Lab
+            Realities</span>
+          <h2 class="dd-display text-3xl sm:text-4xl font-semibold text-white tracking-tight">
+            You have a DD lab comprehension test tomorrow.
+          </h2>
+          <p class="text-slate-400 text-sm max-w-xl mx-auto mt-2">
+            Compare the three ways students prepare for CS/ECE F215 practical evaluations.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <!-- Card 1: Physical Lab Hours -->
+          <div
+            class="dd-glass-card p-6 border border-slate-800 rounded-2xl flex flex-col justify-between text-left hover:border-slate-700 transition">
+            <div>
+              <div class="text-[11px] dd-mono font-semibold text-neutral-300 uppercase tracking-wider mb-3">01 ·
+                Physical Lab Hours</div>
+              <h3 class="text-lg font-bold text-white mb-2">Wait for open lab hours</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Spend forty minutes hunting for a working breadboard rail and debugging a burnt 74LS83 chip with bent
+                pin 14.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <div class="dd-mono text-xs font-bold text-neutral-200">40 min lost</div>
+              <div class="text-[11px] text-slate-500">to faulty jumpers and worn IC sockets</div>
+            </div>
+          </div>
+
+          <!-- Card 2: Desktop EDA Suites -->
+          <div
+            class="dd-glass-card p-6 border border-slate-800 rounded-2xl flex flex-col justify-between text-left hover:border-slate-700 transition">
+            <div>
+              <div class="text-[11px] dd-mono font-semibold text-neutral-300 uppercase tracking-wider mb-3">02 · Desktop
+                EDA Suites</div>
+              <h3 class="text-lg font-bold text-white mb-2">Install 20 GB desktop tools</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Fight license servers, project wizards, and Verilog testbenches just to verify a 4-bit binary-to-Gray
+                code converter.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <div class="dd-mono text-xs font-bold text-neutral-200">20 GB install</div>
+              <div class="text-[11px] text-slate-500">and vendor license manager overhead</div>
+            </div>
+          </div>
+
+          <!-- Card 3: DD Trainer Kit (Highlighted with Luminous Amber/Cobalt Border) -->
+          <div
+            class="dd-glass-card p-6 border-2 border-neutral-700/80 bg-gradient-to-b from-amber-500/10 via-slate-900/60 to-blue-500/10 rounded-2xl flex flex-col justify-between text-left shadow-[0_0_40px_-10px_rgba(245,158,11,0.25)] relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-white/20 rounded-full blur-2xl"></div>
+            <div>
+              <div
+                class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-slate-950 font-bold text-[10px] dd-mono uppercase tracking-wider mb-3">
+                ★ 03 · DD Trainer Kit
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Open DD Trainer Kit</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Place your 74-series ICs, patch color-coded wires, flip the input switches, and verify your circuit in
+                seconds.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-neutral-700">
+              <div class="dd-mono text-xs font-bold text-white">0 ms compile</div>
+              <div class="text-[11px] text-slate-300">Run in browser with instant pin feedback</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3-STEP WORKFLOW SECTION
+         "From Boolean expression to verified circuit in three steps"
+         ====================================================================== -->
+    <section id="workflow" class="py-16 md:py-24 px-4">
+      <div class="max-w-6xl mx-auto">
+
+        <div class="text-center mb-16">
+          <span class="dd-mono text-xs uppercase tracking-wider text-neutral-300 font-semibold mb-2 block">Direct
+            Hardware Workflow</span>
+          <h2 class="dd-display text-3xl sm:text-4xl font-semibold text-white tracking-tight">
+            From Boolean expression to verified circuit in three steps.
+          </h2>
+          <p class="text-slate-400 text-sm max-w-xl mx-auto mt-2">
+            The same procedure followed in BITS Pilani Hyderabad Digital Design laboratories.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Step 1 -->
+          <div
+            class="dd-glass-card p-6 border border-slate-800 rounded-2xl text-left relative group hover:border-neutral-700/50 transition">
+            <div
+              class="w-10 h-10 rounded-xl bg-white/10 border border-neutral-700/30 text-neutral-300 font-black text-sm flex items-center justify-center dd-mono mb-4">
+              01
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Step 01 · Drop 74-Series ICs</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Drag 7400, 7402, 7404, 7408, 7432, 7486, 7483, 74138, 74151, 7474, 7476, or 7447 onto the breadboard.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-slate-800/80">
+              <span
+                class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] dd-mono text-slate-300">7400
+                NAND</span>
+              <span
+                class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] dd-mono text-slate-300">7483
+                Adder</span>
+              <span
+                class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] dd-mono text-slate-300">74151
+                MUX</span>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="dd-glass-card p-6 border border-slate-800 rounded-2xl text-left relative group hover:border-neutral-700/50 transition">
+            <div
+              class="w-10 h-10 rounded-xl bg-neutral-800/10 border border-neutral-700/30 text-neutral-300 font-black text-sm flex items-center justify-center dd-mono mb-4">
+              02
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Step 02 · Patch Wires &amp; Clock</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Connect VCC (+5V) and GND, route color-coded jumpers, and set square-wave clock frequency.
+            </p>
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-800/80">
+              <span class="text-[10px] text-slate-400">Jumper Rails:</span>
+              <span class="w-3.5 h-3.5 rounded-full bg-yellow-400"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-neutral-600"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-neutral-700"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-white"></span>
+              <span class="w-3.5 h-3.5 rounded-full bg-neutral-500"></span>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="dd-glass-card p-6 border border-slate-800 rounded-2xl text-left relative group hover:border-neutral-700/50 transition">
+            <div
+              class="w-10 h-10 rounded-xl bg-neutral-800/10 border border-neutral-700/30 text-neutral-300 font-black text-sm flex items-center justify-center dd-mono mb-4">
+              03
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Step 03 · Probe &amp; Verify</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Hover any IC pin to inspect live logic states (HIGH 1 / LOW 0 / HI-Z), view 7-segment outputs, and check
+              off truth tables.
+            </p>
+            <div
+              class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] dd-mono text-neutral-300">
+              <span>Probe: Logic 1 (+5V)</span>
+              <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         NUMBERED OUTCOME BENTO GRID
+         01 · Hardware Precision  |  02 · Speed & Waveforms  |  03 · BITS F215 Lab Ready
+         ====================================================================== -->
+    <section class="py-16 md:py-24 px-4 bg-slate-950/70 border-t border-slate-900">
+      <div class="max-w-6xl mx-auto space-y-16">
+
+        <!-- BENTO ITEM 01: HARDWARE PRECISION (PIN-ACCURATE DIP ERGONOMICS) -->
+        <div id="xray-inspector" class="dd-glass-card p-6 sm:p-8 border border-slate-800 rounded-3xl">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+            <div class="lg:col-span-5 text-left">
+              <span class="dd-mono text-xs uppercase tracking-wider text-neutral-300 font-semibold mb-2 block">01 ·
+                Hardware Precision</span>
+              <h3 class="dd-display text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-3">
+                Pin-Accurate DIP Ergonomics.
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                Hover every physical pin on DIP-14 and DIP-16 packages. Check internal NAND, XOR, adder cells, and
+                VCC/GND rail locations before connecting patch cords on the live board.
+              </p>
+
+              <!-- Chip Selector Buttons -->
+              <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="selectXrayChip('7400')" id="chip-btn-7400"
+                  class="chip-select-btn px-3 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs dd-mono transition">
+                  74LS00 (NAND)
+                </button>
+                <button onclick="selectXrayChip('7474')" id="chip-btn-7474"
+                  class="chip-select-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 font-medium text-xs dd-mono hover:text-white transition">
+                  74LS74 (D-FF)
+                </button>
+                <button onclick="selectXrayChip('7483')" id="chip-btn-7483"
+                  class="chip-select-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 font-medium text-xs dd-mono hover:text-white transition">
+                  74LS83 (4-Bit Adder)
+                </button>
+                <button onclick="selectXrayChip('7447')" id="chip-btn-7447"
+                  class="chip-select-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 font-medium text-xs dd-mono hover:text-white transition">
+                  74LS47 (BCD)
+                </button>
+              </div>
+
+              <!-- Pin Detail Box -->
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-700 dd-mono text-xs mb-4">
+                <div class="text-slate-400 text-[10px] uppercase">Pin Telemetry Inspector</div>
+                <div id="xray-pin-title" class="text-sm font-bold text-neutral-300 mt-1">Pin 1: Input 1A</div>
+                <div id="xray-pin-desc" class="text-slate-300 text-[11px] mt-1">Gate 1 first input pin. Connects to Quad
+                  2-Input NAND Gate 1.</div>
+                <div class="mt-2 pt-2 border-t border-slate-800 flex justify-between text-[10px] text-slate-400">
+                  <span>Logic Threshold: <strong class="text-white">VIL ≤ 0.8V / VIH ≥ 2.0V</strong></span>
+                  <span>Delay: <strong class="text-neutral-300">9.5 ns</strong></span>
+                </div>
+              </div>
+
+              <!-- PCB Macro View Card -->
+              <div class="rounded-xl overflow-hidden border border-slate-800 relative group">
+                <img src="./Assets/trainer-kit-pcb-macro.jpg" alt="Trainer Kit PCB Macro"
+                  class="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-105">
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-2.5">
+                  <div class="text-[10px] dd-mono text-slate-300 flex items-center justify-between w-full">
+                    <span class="text-white font-semibold">PHY-1002 Dual PCB Rail</span>
+                    <span class="text-neutral-300">0.8mm Brass Turrets</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Interactive DIP Chip Pinout Diagram -->
+            <div
+              class="lg:col-span-7 bg-[#0b0f19] border border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center relative">
+              <div
+                class="text-[11px] dd-mono text-slate-400 mb-4 flex items-center justify-between w-full border-b border-slate-800 pb-2">
+                <span id="xray-chip-package-label" class="text-white font-bold">SN74LS00N • DIP-14 PACKAGE</span>
+                <span class="text-white">Hover any pin</span>
+              </div>
+
+              <!-- DIP-14 / DIP-16 Package Visual -->
+              <div class="w-full max-w-md bg-zinc-900 border-2 border-zinc-600 rounded-lg p-4 relative shadow-2xl">
+                <!-- Chip Notch -->
+                <div
+                  class="absolute left-1/2 -top-2 -translate-x-1/2 w-6 h-3 bg-[#0b0f19] rounded-b-full border border-zinc-600 border-t-0">
+                </div>
+                <div class="text-center dd-mono text-xs text-zinc-400 mb-6 font-bold" id="xray-chip-center-label">
+                  SN74LS00N</div>
+
+                <!-- Pins Container: Left Column (1..7) vs Right Column (14..8) -->
+                <div class="grid grid-cols-2 gap-8 text-xs dd-mono" id="xray-pins-container">
+                  <!-- Generated dynamically in JavaScript -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BENTO ITEM 02: SPEED & WAVEFORMS (LIVING TIMING DIAGRAMS) -->
+        <div id="waveform-scope" class="dd-glass-card p-6 sm:p-8 border border-slate-800 rounded-3xl">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+            <div class="lg:col-span-5 text-left order-2 lg:order-1">
+              <span class="dd-mono text-xs uppercase tracking-wider text-neutral-400 font-semibold mb-2 block">02 ·
+                Speed &amp; Waveforms</span>
+              <h3 class="dd-display text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-3">
+                Living Timing Diagrams.
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                Observe clock transitions and synchronous division. Drag the clock rate slider from 1 Hz to 20 Hz to
+                drive a real-time 5-channel digital timing oscilloscope and an active 7-segment display.
+              </p>
+
+              <!-- Clock Slider Control -->
+              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+                <div class="flex justify-between items-center text-xs dd-mono">
+                  <span class="text-slate-300">Clock Generator Frequency:</span>
+                  <span id="clk-freq-readout" class="text-white font-medium">4 Hz</span>
+                </div>
+                <input type="range" id="clk-freq-slider" min="1" max="20" value="4"
+                  class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  oninput="updateClockFrequency(this.value)">
+                <div class="flex justify-between text-[10px] dd-mono text-slate-500">
+                  <span>1 Hz (Single-step)</span>
+                  <span>10 Hz (Lab Run)</span>
+                  <span>20 Hz (High Speed)</span>
+                </div>
+              </div>
+
+              <!-- 7-Segment Sync Readout -->
+              <div
+                class="mt-4 p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] dd-mono text-slate-400">SYNCHRONOUS COUNTER VALUE</div>
+                  <div id="bcd-count-binary" class="dd-mono text-sm font-bold text-neutral-300 mt-0.5">Q3..Q0 = 0000
+                  </div>
+                </div>
+                <!-- 7-Segment Amber Digit -->
+                <div
+                  class="px-4 py-2 bg-black rounded-lg border border-neutral-700/40 shadow-[0_0_20px_rgba(255,255,255,0.08)]">
+                  <span id="seven-seg-digit" class="dd-mono text-3xl font-bold text-neutral-300">0</span>
+                </div>
+              </div>
+
+              <!-- Living Timing Diagram Video Loop -->
+              <div class="mt-4 rounded-xl overflow-hidden border border-slate-800 aspect-video relative shadow-lg">
+                <video autoplay loop muted playsinline poster="./Assets/logic-waveform-3d.jpg"
+                  class="w-full h-full object-cover">
+                  <source src="./Assets/demo-waveform-7seg-loop.mp4" type="video/mp4">
+                  <img src="./Assets/logic-waveform-3d.jpg" alt="Logic Waveform 3D" class="w-full h-full object-cover">
+                </video>
+                <div
+                  class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur px-2.5 py-1 rounded text-[10px] dd-mono text-neutral-300 border border-slate-700">
+                  WAVEFORM &amp; 7-SEGMENT HARDWARE CAPTURE
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Real-time Oscilloscope Canvas -->
+            <div
+              class="lg:col-span-7 bg-[#060a12] border border-slate-700 rounded-2xl p-5 relative overflow-hidden order-1 lg:order-2">
+              <div
+                class="flex justify-between items-center text-xs dd-mono text-slate-400 border-b border-slate-800 pb-2 mb-3">
+                <span class="text-white font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                  5-CHANNEL LOGIC SCOPE
+                </span>
+                <span class="text-neutral-300 text-[10px]">TIMEBASE: 50 ms/div</span>
+              </div>
+
+              <!-- Canvas Oscilloscope -->
+              <canvas id="scope-canvas"
+                class="w-full h-64 bg-slate-950 rounded-lg border border-slate-800 shadow-inner"></canvas>
+
+              <div class="mt-3 flex items-center justify-between text-[10px] dd-mono text-slate-500">
+                <span class="flex items-center gap-1"><span
+                    class="w-2 h-2 rounded-sm bg-yellow-400 inline-block"></span> CLK (Master)</span>
+                <span class="flex items-center gap-1"><span
+                    class="w-2 h-2 rounded-sm bg-neutral-600 inline-block"></span> Q0 (÷2)</span>
+                <span class="flex items-center gap-1"><span
+                    class="w-2 h-2 rounded-sm bg-neutral-700 inline-block"></span> Q1 (÷4)</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-white inline-block"></span> Q2
+                  (÷8)</span>
+                <span class="flex items-center gap-1"><span
+                    class="w-2 h-2 rounded-sm bg-neutral-500 inline-block"></span> Q3 (÷16)</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BENTO ITEM 03: BITS F215 LAB READY (ONE-CLICK PRESETS) -->
+        <div id="lab-experiments" class="dd-glass-card p-6 sm:p-8 border border-slate-800 rounded-3xl">
+          <div class="text-left mb-8">
+            <span class="dd-mono text-xs uppercase tracking-wider text-white font-semibold mb-2 block">03 · BITS F215
+              Lab Ready</span>
+            <h3 class="dd-display text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-2">
+              Official BITS Hyderabad Lab Experiments.
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-2xl">
+              Preset wiring configurations aligned with the Digital Design course manual (`CS F215 / ECE F215 / EEE F215
+              / INSTR F215`). Load any circuit directly into the simulator with one click.
+            </p>
+          </div>
+
+          <!-- Experiment Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <!-- Exp 01 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 01</span>
+                  <span>BASIC GATES</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">Universal NAND /
+                  NOR Logic</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Implement AND, OR, NOT, XOR functions using only SN74LS00N and SN74LS02N universal gates.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7400, 7402, 7404, 7408, 7432, 7486</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_gates')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+            <!-- Exp 02 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 02</span>
+                  <span>COMBINATIONAL</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">SOP/POS &amp;
+                  Half / Full Adder</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Synthesize Boolean equations and construct arithmetic adders using XOR, AND, and OR stages.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7486, 7408, 7432</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_adder_gates')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+            <!-- Exp 03 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 03</span>
+                  <span>ARITHMETIC</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">4-Bit Parallel
+                  Binary Adder</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Perform 4-bit addition with fast internal carry lookahead and carry ripple across stages.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 74LS83 Dual Mount</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_7483')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+            <!-- Exp 04 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 04</span>
+                  <span>DATA ROUTING</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">8:1 MUX &amp;
+                  2:4 Decoder</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Implement complex logic functions using SN74LS151N data selectors and active-low strobes.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 74151, 74155</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_74151_74155')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+            <!-- Exp 05 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 05</span>
+                  <span>SEQUENTIAL</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">Edge-Triggered
+                  Flip-Flops</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Verify setup time, hold time, and toggle modes on SN74LS74N D-FF and SN74LS76N Master-Slave JK-FF.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7474, 7476</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_7474_7476')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+            <!-- Exp 06 -->
+            <div
+              class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between hover:border-neutral-700/60 transition group text-left">
+              <div>
+                <div class="flex justify-between items-center text-[10px] dd-mono text-slate-400 mb-2">
+                  <span class="text-neutral-400 font-mono text-xs font-semibold">EXP 06</span>
+                  <span>COUNTERS &amp; DISPLAY</span>
+                </div>
+                <h4 class="text-sm font-bold text-white mb-1.5 group-hover:text-neutral-300 transition">Ripple Counter
+                  &amp; 7-Segment</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                  Wire 7493 asynchronous counter outputs into SN74LS47N BCD-to-7-segment decoder to drive common-anode
+                  LEDs.
+                </p>
+                <div class="text-[10px] dd-mono text-slate-500 mb-4">ICs: 7493, 7447</div>
+              </div>
+              <button onclick="launchTrainerKitWithPreset('exp_7493_7447')"
+                class="w-full py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs dd-mono transition shadow-sm flex items-center justify-center gap-1.5">
+                <span>Load in Trainer Kit →</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         HARDWARE FOOTER
+         ====================================================================== -->
+    <footer class="py-12 border-t border-slate-800 bg-[#040609] text-slate-400 text-xs">
+      <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+
+        <div class="flex flex-col text-left">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-6 h-6 rounded" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="5" fill="#0b0f19" stroke="rgba(255,255,255,0.15)" />
+              <rect x="5" y="4" width="14" height="16" rx="2" fill="#151b28" stroke="#334155" />
+              <line x1="2" y1="7" x2="5" y2="7" stroke="#3b82f6" stroke-width="1.5" />
+              <line x1="2" y1="12" x2="5" y2="12" stroke="#3b82f6" stroke-width="1.5" />
+              <line x1="2" y1="17" x2="5" y2="17" stroke="#3b82f6" stroke-width="1.5" />
+              <line x1="19" y1="7" x2="22" y2="7" stroke="#f59e0b" stroke-width="1.5" />
+              <line x1="19" y1="12" x2="22" y2="12" stroke="#f59e0b" stroke-width="1.5" />
+              <line x1="19" y1="17" x2="22" y2="17" stroke="#f59e0b" stroke-width="1.5" />
+              <circle cx="12" cy="12" r="2" fill="#f59e0b" />
+            </svg>
+            <span class="text-white font-bold dd-mono tracking-wider">PHYSITECH PHY-1002 SIMULATION</span>
+          </div>
+          <p class="text-[11px] text-slate-500 max-w-md">
+            Built for BITS Pilani, Hyderabad Campus. CS F215 / ECE F215 / EEE F215 / INSTR F215 Digital Design course
+            laboratory curriculum.
+          </p>
+        </div>
+
+        <div class="flex flex-col text-left md:text-right text-[11px] dd-mono text-slate-500 space-y-1">
+          <div>Reference: M. Morris Mano &amp; Michael D. Ciletti, <em>Digital Design</em></div>
+          <div>TTL Specification: VCC = +5.0V DC (±5%), Fan-out = 10 LSTTL Loads</div>
+          <div class="text-slate-400">Zero-install local execution. All logic evaluations run in browser memory.</div>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================================
+       IN-PAGE SIMULATOR MODAL / CONTAINER (ZERO-RELOAD TRANSITION)
+       ====================================================================== -->
+  <div id="dd-simulator-modal" class="fixed inset-0 z-50 bg-[#050609] hidden flex-col transition-opacity duration-300">
+    <!-- Hidden hooks for preset router compatibility -->
+    <span id="simulator-modal-title" class="hidden"></span>
+    <a id="btn-open-new-tab" href="physitech_phy_1002_simulator_fixed.html" target="_blank" class="hidden"></a>
+
+    <!-- Simulator Frame (Full Viewport Seamless Office Ribbon Integration) -->
+    <div class="w-full h-full relative overflow-hidden">
+      <iframe id="simulator-iframe" src="" class="w-full h-full border-0"
+        title="Universal Digital Lab Trainer Simulator"></iframe>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       INTERACTIVE VANILLA JS SCRIPTS
+       ====================================================================== -->
+  <script>
+    // ------------------------------------------------------------------------
+    // 1. ABSTRACT WAVY GOLDEN-BLUE 3D LIQUID METAL SCULPTURE WEBGL SHADER
+    // ------------------------------------------------------------------------
+    function initAbstractLiquidSculpture(canvas) {
+      if (!canvas) return;
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+      if (!gl) return;
+      let mx = 0.5, my = 0.5, tx = 0.5, ty = 0.5;
+
+      const updateMouse = (e) => {
+        const cx = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : window.innerWidth * 0.5);
+        const cy = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : window.innerHeight * 0.5);
+        tx = cx / Math.max(window.innerWidth, 1);
+        ty = 1.0 - (cy / Math.max(window.innerHeight, 1));
+      };
+
+      window.addEventListener('mousemove', updateMouse, { passive: true });
+      window.addEventListener('touchmove', updateMouse, { passive: true });
+
+      const vs = `attribute vec2 p; varying vec2 uv; void main(){ uv = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }`;
+      const fs = `
+        precision highp float;
+        varying vec2 uv;
+        uniform float uT;
+        uniform vec2 uR;
+        uniform vec2 uM;
+
+        const vec3 sphereCenter = vec3(0.0, -0.92, 0.0);
+        const float rBase = 0.72;
+
+        float getRidge(vec3 p, out float outMouseRipple) {
+          vec3 q = p - sphereCenter;
+          float dBase = length(q);
+          vec3 nBase = q / max(dBase, 0.0001);
+
+          // Vortex swirl poles matching reference
+          vec3 pole1 = normalize(vec3(0.08, 0.86, 0.50));
+          vec3 pole2 = normalize(vec3(-0.66, -0.20, 0.72));
+          
+          // Interactive dynamic mouse wave pole
+          vec3 poleMouse = normalize(vec3((uM.x - 0.5) * 1.8, (uM.y - 0.25) * 1.8, 0.85));
+
+          float d1 = length(nBase - pole1);
+          float d2 = length(nBase - pole2);
+          float dM = length(nBase - poleMouse);
+
+          // Multi-pole topological interference
+          float topo = d1 * 1.35 + d2 * 1.1 + dM * 0.45;
+
+          // Fluid domain twists
+          float twist = sin(q.x * 4.2 + q.y * 3.6 + uT * 0.35) * 0.16 + cos(q.y * 4.8 - q.z * 3.2 - uT * 0.25) * 0.14;
+          float warp = sin(dot(q, vec3(3.0, 2.7, -2.9)) + twist * 2.2) * 0.24;
+
+          // Interactive mouse ripples undulating outward from hover
+          float mouseRipple = sin(dM * 26.0 - uT * 4.2) * exp(-dM * 3.2) * 0.35;
+          outMouseRipple = mouseRipple;
+
+          // Flowing ripple phase
+          float phase = (topo + warp) * 26.0 - uT * 0.75 + mouseRipple;
+
+          // Sculpted wave ridges (crests vs valleys)
+          return pow(clamp(0.5 + 0.5 * cos(phase), 0.0, 1.0), 1.7);
+        }
+
+        float map(vec3 p) {
+          vec3 q = p - sphereCenter;
+          float dBase = length(q);
+          float mouseRip;
+          float ridge = getRidge(p, mouseRip);
+
+          // 3D surface displacement
+          float h = ridge * 0.046 + mouseRip * 0.016;
+          float breath = sin(uT * 0.5) * 0.01;
+
+          return dBase - (rBase + h + breath);
+        }
+
+        vec3 calcNormal(vec3 p) {
+          vec2 e = vec2(0.002, 0.0);
+          return normalize(vec3(
+            map(p + e.xyy) - map(p - e.xyy),
+            map(p + e.yxy) - map(p - e.yxy),
+            map(p + e.yyx) - map(p - e.yyx)
+          ));
+        }
+
+        void main() {
+          vec2 st = (uv - 0.5) * vec2(uR.x / max(uR.y, 1.0), 1.0);
+          
+          vec3 ro = vec3(0.0, 0.0, 2.45);
+          vec3 rd = normalize(vec3(st.x, st.y, -1.45));
+
+          // Bounding sphere intersection acceleration test
+          vec3 oc = ro - sphereCenter;
+          float b = dot(oc, rd);
+          float c = dot(oc, oc) - 0.95 * 0.95;
+          float hDisc = b * b - c;
+
+          float hit = 0.0;
+          vec3 p = ro;
+          float t = 0.0;
+
+          if (hDisc > 0.0) {
+            float tNear = max(-b - sqrt(hDisc), 0.0);
+            float tFar = -b + sqrt(hDisc);
+            t = tNear;
+            for (int i = 0; i < 48; i++) {
+              p = ro + rd * t;
+              float d = map(p);
+              if (d < 0.0015) {
+                hit = 1.0;
+                break;
+              }
+              if (t > tFar) break;
+              t += d * 0.82;
+            }
+          }
+
+          // Pitch-black void background with subtle dual gold/blue cosmic haze
+          vec3 col = vec3(0.0, 0.0, 0.0);
+          float distCenter = length(st - vec2(0.0, -0.55));
+          float nebulaGold = exp(-distCenter * 2.8) * 0.07;
+          float nebulaBlue = exp(-length(st - vec2(0.35, -0.75)) * 3.2) * 0.06;
+          col += vec3(1.0, 0.65, 0.2) * nebulaGold + vec3(0.15, 0.45, 1.0) * nebulaBlue;
+
+          // Floating golden ember sparks drifting in the void (matching reference)
+          for (int j = 0; j < 32; j++) {
+            float id = float(j);
+            float rx = fract(sin(id * 12.9898 + 1.23) * 43758.5453) * 2.4 - 1.2;
+            float ry = fract(sin(id * 78.233 + 4.56) * 23421.6312) * 1.8 - 0.9;
+            float spd = 0.04 + fract(sin(id * 34.123) * 12345.6) * 0.08;
+            float ph = fract(sin(id * 91.456) * 76543.2) * 6.28;
+            
+            float py = mod(ry + uT * spd, 2.0) - 1.0;
+            float px = rx + sin(uT * 0.6 + ph) * 0.07 + (uM.x - 0.5) * 0.08;
+            
+            float pDist = length(st - vec2(px, py));
+            float pSize = 0.0035 + fract(sin(id * 19.34) * 5678.9) * 0.004;
+            float pBlink = 0.35 + 0.65 * sin(uT * 2.5 + ph);
+            
+            float spark = exp(-pDist * pDist / (pSize * pSize * 3.0)) * pBlink;
+            col += vec3(1.0, 0.72, 0.26) * spark * 1.35;
+          }
+
+          if (hit > 0.5) {
+            vec3 n = calcNormal(p);
+            vec3 v = normalize(ro - p);
+
+            // Compute ridge height for crevice ambient occlusion
+            float dummyM;
+            float ridgeVal = getRidge(p, dummyM);
+            float creviceAO = clamp(0.25 + 0.75 * ridgeVal, 0.0, 1.0);
+
+            // Dynamic light rigs: gold key on top, electric blue on rims
+            vec3 lightGold = normalize(vec3(-0.25 + (uM.x - 0.5) * 0.5, 0.92 + (uM.y - 0.5) * 0.2, 0.68));
+            vec3 lightBlueRim = normalize(vec3(0.72, -0.58, -0.42));
+            vec3 lightBlueSide = normalize(vec3(-0.85, -0.32, 0.35));
+
+            // Specular reflections
+            vec3 refV = reflect(-v, n);
+            float specGold1 = pow(max(dot(refV, lightGold), 0.0), 16.0);
+            float specGold2 = pow(max(dot(refV, lightGold), 0.0), 54.0);
+            float specBlueRim = pow(max(dot(refV, lightBlueRim), 0.0), 22.0);
+            float specBlueSide = pow(max(dot(refV, lightBlueSide), 0.0), 18.0);
+
+            // Diffuse components
+            float diffGold = max(dot(n, lightGold), 0.0);
+            float diffBlueSide = max(dot(n, lightBlueSide), 0.0);
+            float diffBlueRim = max(dot(n, lightBlueRim), 0.0);
+
+            // Grazing Fresnel for vivid electric-blue edges
+            float fresnel = pow(1.0 - max(dot(n, v), 0.0), 3.4);
+
+            // Color palettes matching reference
+            vec3 obsidian = vec3(0.035, 0.038, 0.055);
+            vec3 goldMain = vec3(1.0, 0.75, 0.25);
+            vec3 goldHot = vec3(1.0, 0.94, 0.70);
+            vec3 blueElectric = vec3(0.18, 0.52, 1.0);
+            vec3 blueDeep = vec3(0.08, 0.28, 0.85);
+
+            // Shading composition
+            vec3 surf = obsidian * creviceAO;
+            
+            // Warm liquid gold highlights on crests
+            surf += goldMain * (pow(diffGold, 1.5) * 0.75 + specGold1 * 0.85) * creviceAO;
+            surf += goldHot * (specGold2 * 1.35) * creviceAO;
+
+            // Vivid electric blue on flanks, rim, and Fresnel
+            surf += blueElectric * (fresnel * 1.55 + specBlueRim * 0.85 + specBlueSide * 0.65);
+            surf += blueDeep * (diffBlueSide * 0.45 + diffBlueRim * 0.35);
+
+            // Natural smooth edge silhouette
+            float edgeAlpha = smoothstep(0.0, 0.18, dot(n, v));
+            col = mix(col, surf, edgeAlpha);
+          }
+
+          // Floating foreground embers over the sphere as well
+          for (int k = 0; k < 12; k++) {
+            float id = float(k + 32);
+            float rx = fract(sin(id * 15.123) * 41235.1) * 1.6 - 0.8;
+            float ry = fract(sin(id * 63.456) * 29871.3) * 1.2 - 0.6;
+            float spd = 0.05 + fract(sin(id * 45.67) * 15432.1) * 0.07;
+            float ph = fract(sin(id * 87.65) * 65432.1) * 6.28;
+            
+            float py = mod(ry + uT * spd, 1.6) - 0.8;
+            float px = rx + sin(uT * 0.7 + ph) * 0.05 + (uM.x - 0.5) * 0.06;
+            
+            float pDist = length(st - vec2(px, py));
+            float pSize = 0.003 + fract(sin(id * 12.34) * 8765.4) * 0.0035;
+            float pBlink = 0.4 + 0.6 * sin(uT * 2.8 + ph);
+            
+            float spark = exp(-pDist * pDist / (pSize * pSize * 2.5)) * pBlink;
+            col += vec3(1.0, 0.75, 0.32) * spark * 1.2;
+          }
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      const compile = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          console.error('Shader compile error:', gl.getShaderInfoLog(s));
+        }
+        return s;
+      };
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        console.error('Program link error:', gl.getProgramInfoLog(prog));
+      }
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      const uT = gl.getUniformLocation(prog, 'uT'), uR = gl.getUniformLocation(prog, 'uR'), uM = gl.getUniformLocation(prog, 'uM');
+      const resize = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = canvas.clientWidth * dpr; canvas.height = canvas.clientHeight * dpr;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      };
+      resize(); window.addEventListener('resize', resize);
+
+      const t0 = performance.now();
+      (function render(now) {
+        mx += (tx - mx) * 0.08; my += (ty - my) * 0.08;
+        gl.uniform1f(uT, (now - t0) * 0.001);
+        gl.uniform2f(uR, canvas.width, canvas.height);
+        gl.uniform2f(uM, mx, my);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      })(t0);
+    }
+
+    // ------------------------------------------------------------------------
+    // 2. INTERACTIVE HALF-ADDER BREADBOARD LOGIC
+    // ------------------------------------------------------------------------
+    const circuitState = { sw1: 1, sw0: 0 };
+
+    function toggleSwitch(swId) {
+      circuitState[swId] = circuitState[swId] === 1 ? 0 : 1;
+      updateCircuitUI();
+    }
+
+    function updateCircuitUI() {
+      const a = circuitState.sw1;
+      const b = circuitState.sw0;
+      const sum = a ^ b;
+      const carry = a & b;
+
+      // Update switch levers & readouts
+      const sw1Lever = document.getElementById('sw1-lever');
+      const sw1Val = document.getElementById('sw1-val');
+      if (a === 1) {
+        sw1Lever.style.transform = 'translateY(-4px)';
+        sw1Lever.className = 'w-6 h-5 bg-gradient-to-b from-neutral-100 to-neutral-400 rounded shadow-md transition-transform';
+        sw1Val.textContent = 'HIGH (1)';
+        sw1Val.className = 'dd-mono text-xs font-bold text-neutral-300 mt-1';
+      } else {
+        sw1Lever.style.transform = 'translateY(4px)';
+        sw1Lever.className = 'w-6 h-5 bg-gradient-to-b from-slate-200 to-slate-400 rounded shadow-md transition-transform';
+        sw1Val.textContent = 'LOW (0)';
+        sw1Val.className = 'dd-mono text-xs font-bold text-neutral-400 mt-1';
+      }
+
+      const sw0Lever = document.getElementById('sw0-lever');
+      const sw0Val = document.getElementById('sw0-val');
+      if (b === 1) {
+        sw0Lever.style.transform = 'translateY(-4px)';
+        sw0Lever.className = 'w-6 h-5 bg-gradient-to-b from-neutral-100 to-neutral-400 rounded shadow-md transition-transform';
+        sw0Val.textContent = 'HIGH (1)';
+        sw0Val.className = 'dd-mono text-xs font-bold text-neutral-300 mt-1';
+      } else {
+        sw0Lever.style.transform = 'translateY(4px)';
+        sw0Lever.className = 'w-6 h-5 bg-gradient-to-b from-slate-200 to-slate-400 rounded shadow-md transition-transform';
+        sw0Val.textContent = 'LOW (0)';
+        sw0Val.className = 'dd-mono text-xs font-bold text-neutral-400 mt-1';
+      }
+
+      // Update LEDs
+      const ledSum = document.getElementById('led-sum');
+      const ledSumVal = document.getElementById('led-sum-val');
+      if (sum === 1) {
+        ledSum.className = 'mt-2 w-7 h-7 rounded-full bg-gradient-to-br from-red-400 via-red-500 to-red-700 border-2 border-red-300 shadow-[0_0_16px_#ef4444] transition-all';
+        ledSumVal.textContent = '1 (HIGH)';
+        ledSumVal.className = 'dd-mono text-xs font-bold text-red-400 mt-2';
+      } else {
+        ledSum.className = 'mt-2 w-7 h-7 rounded-full bg-slate-900 border-2 border-slate-700 shadow-none transition-all';
+        ledSumVal.textContent = '0 (LOW)';
+        ledSumVal.className = 'dd-mono text-xs font-bold text-slate-500 mt-2';
+      }
+
+      const ledCarry = document.getElementById('led-carry');
+      const ledCarryVal = document.getElementById('led-carry-val');
+      if (carry === 1) {
+        ledCarry.className = 'mt-2 w-7 h-7 rounded-full bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-700 border-2 border-emerald-300 shadow-[0_0_16px_#10b981] transition-all';
+        ledCarryVal.textContent = '1 (HIGH)';
+        ledCarryVal.className = 'dd-mono text-xs font-bold text-white mt-2';
+      } else {
+        ledCarry.className = 'mt-2 w-7 h-7 rounded-full bg-slate-900 border-2 border-slate-700 shadow-none transition-all';
+        ledCarryVal.textContent = '0 (LOW)';
+        ledCarryVal.className = 'dd-mono text-xs font-bold text-slate-500 mt-2';
+      }
+
+      // Update wire SVG classes & strokes
+      const setWire = (id, high) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.setAttribute('stroke', high ? '#ef4444' : '#3b82f6');
+        if (high) {
+          el.classList.add('dd-wire-active');
+        } else {
+          el.classList.remove('dd-wire-active');
+        }
+      };
+
+      setWire('wire-a-xor', a === 1);
+      setWire('wire-a-and', a === 1);
+      setWire('wire-b-xor', b === 1);
+      setWire('wire-b-and', b === 1);
+      setWire('wire-xor-sum', sum === 1);
+      setWire('wire-and-carry', carry === 1);
+
+      // Dynamically align wire coordinates
+      updateDynamicWires();
+
+      // Highlight active row in Truth Table
+      const rowIdx = (a << 1) | b;
+      for (let i = 0; i < 4; i++) {
+        const row = document.getElementById(`tt-row-${i}`);
+        if (i === rowIdx) {
+          row.className = 'bg-neutral-800 text-white font-bold border-l-2 border-white transition-colors';
+        } else {
+          row.className = 'text-slate-300 transition-colors';
+        }
+      }
+
+      document.getElementById('active-state-readout').textContent = `Sum = ${sum}, Carry = ${carry}`;
+    }
+
+    // Dynamic wire geometry based on actual terminal positions
+    function updateDynamicWires() {
+      const svg = document.getElementById('interactive-wire-svg');
+      if (!svg) return;
+      const svgRect = svg.getBoundingClientRect();
+      if (svgRect.width === 0 || svgRect.height === 0) return;
+
+      const getPt = (el) => {
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+          x: r.left + r.width / 2 - svgRect.left,
+          y: r.top + r.height / 2 - svgRect.top
+        };
+      };
+
+      const tSW1 = getPt(document.getElementById('term-sw1'));
+      const tSW0 = getPt(document.getElementById('term-sw0'));
+      const tXorA = getPt(document.getElementById('term-xor-a'));
+      const tXorB = getPt(document.getElementById('term-xor-b'));
+      const tXorY = getPt(document.getElementById('term-xor-y'));
+      const tAndA = getPt(document.getElementById('term-and-a'));
+      const tAndB = getPt(document.getElementById('term-and-b'));
+      const tAndY = getPt(document.getElementById('term-and-y'));
+      const tSum = getPt(document.getElementById('term-sum-in'));
+      const tCarry = getPt(document.getElementById('term-carry-in'));
+
+      if (!tSW1 || !tSW0 || !tXorA || !tXorB || !tXorY || !tAndA || !tAndB || !tAndY || !tSum || !tCarry) return;
+
+      const midX1 = tSW1.x + Math.max(16, (tXorA.x - tSW1.x) * 0.45);
+      const midX2 = tSW0.x + Math.max(24, (tXorB.x - tSW0.x) * 0.6);
+      const midX3 = tXorY.x + Math.max(16, (tSum.x - tXorY.x) * 0.5);
+
+      document.getElementById('wire-a-xor').setAttribute('d', `M ${tSW1.x} ${tSW1.y} H ${midX1} V ${tXorA.y} H ${tXorA.x}`);
+      document.getElementById('wire-a-and').setAttribute('d', `M ${tSW1.x} ${tSW1.y} H ${midX1} V ${tAndA.y} H ${tAndA.x}`);
+      document.getElementById('wire-b-xor').setAttribute('d', `M ${tSW0.x} ${tSW0.y} H ${midX2} V ${tXorB.y} H ${tXorB.x}`);
+      document.getElementById('wire-b-and').setAttribute('d', `M ${tSW0.x} ${tSW0.y} H ${midX2} V ${tAndB.y} H ${tAndB.x}`);
+      document.getElementById('wire-xor-sum').setAttribute('d', `M ${tXorY.x} ${tXorY.y} H ${midX3} V ${tSum.y} H ${tSum.x}`);
+      document.getElementById('wire-and-carry').setAttribute('d', `M ${tAndY.x} ${tAndY.y} H ${midX3} V ${tCarry.y} H ${tCarry.x}`);
+    }
+
+    // Showcase Tab Switcher
+    function switchShowcaseTab(tab) {
+      const btnInt = document.getElementById('tab-btn-interactive');
+      const btnVid = document.getElementById('tab-btn-video');
+      const cInt = document.getElementById('tab-content-interactive');
+      const cVid = document.getElementById('tab-content-video');
+
+      if (tab === 'interactive') {
+        btnInt.className = 'px-3.5 py-1 rounded-md bg-white text-black font-semibold transition shadow-sm';
+        btnVid.className = 'px-3.5 py-1 rounded-md text-slate-300 hover:text-white font-medium transition';
+        cInt.classList.remove('hidden');
+        cVid.classList.add('hidden');
+        setTimeout(updateDynamicWires, 30);
+      } else {
+        btnVid.className = 'px-3.5 py-1 rounded-md bg-white text-black font-semibold transition shadow-sm';
+        btnInt.className = 'px-3.5 py-1 rounded-md text-slate-300 hover:text-white font-medium transition';
+        cVid.classList.remove('hidden');
+        cInt.classList.add('hidden');
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // 3. IC PINOUT X-RAY INSPECTOR DATA & RENDERER
+    // ------------------------------------------------------------------------
+    const XRAY_DATA = {
+      '7400': {
+        name: 'SN74LS00N • DIP-14 PACKAGE',
+        center: 'SN74LS00N (Quad 2-Input NAND)',
+        totalPins: 14,
+        pins: {
+          1: { name: '1A', role: 'Gate 1 Input A', desc: 'First input pin of Quad 2-Input NAND Gate 1.' },
+          2: { name: '1B', role: 'Gate 1 Input B', desc: 'Second input pin of Quad 2-Input NAND Gate 1.' },
+          3: { name: '1Y', role: 'Gate 1 Output Y', desc: 'NAND output Y = ~(1A · 1B). High unless both inputs are 1.' },
+          4: { name: '2A', role: 'Gate 2 Input A', desc: 'First input pin of Quad 2-Input NAND Gate 2.' },
+          5: { name: '2B', role: 'Gate 2 Input B', desc: 'Second input pin of Quad 2-Input NAND Gate 2.' },
+          6: { name: '2Y', role: 'Gate 2 Output Y', desc: 'NAND output Y = ~(2A · 2B).' },
+          7: { name: 'GND', role: 'Power Supply Ground (0V)', desc: 'Must connect to negative supply rail / circuit ground.' },
+          8: { name: '3Y', role: 'Gate 3 Output Y', desc: 'NAND output Y = ~(3A · 3B).' },
+          9: { name: '3A', role: 'Gate 3 Input A', desc: 'First input pin of Gate 3.' },
+          10: { name: '3B', role: 'Gate 3 Input B', desc: 'Second input pin of Gate 3.' },
+          11: { name: '4Y', role: 'Gate 4 Output Y', desc: 'NAND output Y = ~(4A · 4B).' },
+          12: { name: '4A', role: 'Gate 4 Input A', desc: 'First input pin of Gate 4.' },
+          13: { name: '4B', role: 'Gate 4 Input B', desc: 'Second input pin of Gate 4.' },
+          14: { name: 'VCC', role: 'Positive Supply (+5.0V)', desc: 'Connects to +5V DC power bus. Max voltage rating: 7.0V.' }
+        }
+      },
+      '7474': {
+        name: 'SN74LS74N • DIP-14 PACKAGE',
+        center: 'SN74LS74N (Dual D Flip-Flop)',
+        totalPins: 14,
+        pins: {
+          1: { name: '1CLR', role: 'FF1 Active-Low Clear', desc: 'Asynchronous clear for FF1. Low forces Q1 = 0.' },
+          2: { name: '1D', role: 'FF1 Data Input', desc: 'Data transferred to Q1 on positive clock edge.' },
+          3: { name: '1CLK', role: 'FF1 Clock Input', desc: 'Positive edge-triggered clock (0 to 1 transition).' },
+          4: { name: '1PRE', role: 'FF1 Active-Low Preset', desc: 'Asynchronous preset for FF1. Low forces Q1 = 1.' },
+          5: { name: '1Q', role: 'FF1 Non-Inverted Output', desc: 'True output of Flip-Flop 1.' },
+          6: { name: '1Q̄', role: 'FF1 Inverted Output', desc: 'Complementary output of Flip-Flop 1.' },
+          7: { name: 'GND', role: 'Power Supply Ground (0V)', desc: 'Ground return pin 7.' },
+          8: { name: '2Q̄', role: 'FF2 Inverted Output', desc: 'Complementary output of Flip-Flop 2.' },
+          9: { name: '2Q', role: 'FF2 Non-Inverted Output', desc: 'True output of Flip-Flop 2.' },
+          10: { name: '2PRE', role: 'FF2 Active-Low Preset', desc: 'Asynchronous preset for FF2.' },
+          11: { name: '2CLK', role: 'FF2 Clock Input', desc: 'Positive edge-triggered clock for FF2.' },
+          12: { name: '2D', role: 'FF2 Data Input', desc: 'Data input pin for FF2.' },
+          13: { name: '2CLR', role: 'FF2 Active-Low Clear', desc: 'Asynchronous clear for FF2.' },
+          14: { name: 'VCC', role: 'Positive Supply (+5.0V)', desc: '+5V DC supply rail.' }
+        }
+      },
+      '7483': {
+        name: 'SN74LS83N • DIP-16 PACKAGE',
+        center: 'SN74LS83N (4-Bit Binary Adder)',
+        totalPins: 16,
+        pins: {
+          1: { name: 'A3', role: 'Operand A Bit 3 (MSB)', desc: 'Fourth bit of augend word A.' },
+          2: { name: 'Σ2', role: 'Sum Bit 2', desc: 'Third sum output pin.' },
+          3: { name: 'A2', role: 'Operand A Bit 2', desc: 'Third bit of augend word A.' },
+          4: { name: 'B2', role: 'Operand B Bit 2', desc: 'Third bit of addend word B.' },
+          5: { name: 'VCC', role: 'Positive Supply (+5.0V)', desc: 'VCC power pin for 7483.' },
+          6: { name: 'Σ1', role: 'Sum Bit 1', desc: 'Second sum output pin.' },
+          7: { name: 'B1', role: 'Operand B Bit 1', desc: 'Second bit of addend word B.' },
+          8: { name: 'A1', role: 'Operand A Bit 1', desc: 'Second bit of augend word A.' },
+          9: { name: 'Σ0', role: 'Sum Bit 0 (LSB)', desc: 'Least significant bit of sum word.' },
+          10: { name: 'A0', role: 'Operand A Bit 0 (LSB)', desc: 'Least significant bit of word A.' },
+          11: { name: 'B0', role: 'Operand B Bit 0 (LSB)', desc: 'Least significant bit of word B.' },
+          12: { name: 'GND', role: 'Power Supply Ground (0V)', desc: 'Circuit ground return.' },
+          13: { name: 'C4', role: 'Carry Out (MSB Carry)', desc: 'Output carry from bit 3 stage.' },
+          14: { name: 'C0', role: 'Carry In (LSB Carry)', desc: 'Input carry for addition or 2s-complement subtraction.' },
+          15: { name: 'Σ3', role: 'Sum Bit 3 (MSB)', desc: 'Most significant bit of sum word.' },
+          16: { name: 'B3', role: 'Operand B Bit 3 (MSB)', desc: 'Fourth bit of addend word B.' }
+        }
+      },
+      '7447': {
+        name: 'SN74LS47N • DIP-16 PACKAGE',
+        center: 'SN74LS47N (BCD to 7-Segment)',
+        totalPins: 16,
+        pins: {
+          1: { name: 'B', role: 'BCD Input Bit 1', desc: 'Weight 2 input of binary coded decimal word.' },
+          2: { name: 'C', role: 'BCD Input Bit 2', desc: 'Weight 4 input of binary coded decimal word.' },
+          3: { name: 'LT', role: 'Lamp Test (Active-Low)', desc: 'Grounding LT tests all display segments.' },
+          4: { name: 'BI/RBO', role: 'Blanking Input / Ripple Blanking Out', desc: 'Blanks display or cascades zero suppression.' },
+          5: { name: 'RBI', role: 'Ripple Blanking Input', desc: 'Suppresses leading zeroes.' },
+          6: { name: 'D', role: 'BCD Input Bit 3 (MSB)', desc: 'Weight 8 input of BCD word.' },
+          7: { name: 'A', role: 'BCD Input Bit 0 (LSB)', desc: 'Weight 1 input of BCD word.' },
+          8: { name: 'GND', role: 'Power Supply Ground (0V)', desc: 'Ground pin 8.' },
+          9: { name: 'e', role: 'Segment e Output', desc: 'Open-collector active-low driver for segment e.' },
+          10: { name: 'd', role: 'Segment d Output', desc: 'Open-collector active-low driver for segment d.' },
+          11: { name: 'c', role: 'Segment c Output', desc: 'Open-collector active-low driver for segment c.' },
+          12: { name: 'b', role: 'Segment b Output', desc: 'Open-collector active-low driver for segment b.' },
+          13: { name: 'a', role: 'Segment a Output', desc: 'Open-collector active-low driver for segment a.' },
+          14: { name: 'g', role: 'Segment g Output', desc: 'Open-collector active-low driver for segment g.' },
+          15: { name: 'f', role: 'Segment f Output', desc: 'Open-collector active-low driver for segment f.' },
+          16: { name: 'VCC', role: 'Positive Supply (+5.0V)', desc: 'Power pin 16.' }
+        }
+      }
+    };
+
+    let activeXrayChip = '7400';
+
+    function selectXrayChip(chipKey) {
+      activeXrayChip = chipKey;
+      document.querySelectorAll('.chip-select-btn').forEach(btn => {
+        btn.className = 'chip-select-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 font-medium text-xs dd-mono hover:text-white transition';
+      });
+      document.getElementById(`chip-btn-${chipKey}`).className = 'chip-select-btn px-3 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs dd-mono transition';
+      renderXrayPins();
+    }
+
+    function renderXrayPins() {
+      const data = XRAY_DATA[activeXrayChip];
+      document.getElementById('xray-chip-package-label').textContent = data.name;
+      document.getElementById('xray-chip-center-label').textContent = data.center;
+
+      const container = document.getElementById('xray-pins-container');
+      container.innerHTML = '';
+
+      const leftCol = document.createElement('div');
+      leftCol.className = 'flex flex-col gap-2';
+
+      const rightCol = document.createElement('div');
+      rightCol.className = 'flex flex-col gap-2';
+
+      const half = data.totalPins / 2;
+
+      // Left pins 1..half
+      for (let i = 1; i <= half; i++) {
+        const pin = data.pins[i];
+        const btn = document.createElement('button');
+        btn.className = 'p-1.5 rounded bg-zinc-800 hover:bg-white hover:text-slate-950 text-slate-300 flex items-center justify-between transition text-left border border-zinc-700';
+        btn.innerHTML = `<span class="text-white font-medium">${i}</span> <span class="text-[11px] font-semibold">${pin.name}</span>`;
+        btn.onmouseenter = () => inspectPin(i, pin);
+        btn.onclick = () => inspectPin(i, pin);
+        leftCol.appendChild(btn);
+      }
+
+      // Right pins totalPins down to half+1
+      for (let i = data.totalPins; i > half; i--) {
+        const pin = data.pins[i];
+        const btn = document.createElement('button');
+        btn.className = 'p-1.5 rounded bg-zinc-800 hover:bg-white hover:text-slate-950 text-slate-300 flex items-center justify-between transition text-left border border-zinc-700';
+        btn.innerHTML = `<span class="text-[11px] font-semibold">${pin.name}</span> <span class="text-white font-medium">${i}</span>`;
+        btn.onmouseenter = () => inspectPin(i, pin);
+        btn.onclick = () => inspectPin(i, pin);
+        rightCol.appendChild(btn);
+      }
+
+      container.appendChild(leftCol);
+      container.appendChild(rightCol);
+
+      // Default inspect pin 1
+      inspectPin(1, data.pins[1]);
+    }
+
+    function inspectPin(pinNum, pin) {
+      document.getElementById('xray-pin-title').textContent = `Pin ${pinNum}: ${pin.name} (${pin.role})`;
+      document.getElementById('xray-pin-desc').textContent = pin.desc;
+    }
+
+    // ------------------------------------------------------------------------
+    // 4. REAL-TIME OSCILLOSCOPE & BCD COUNTER CANVAS
+    // ------------------------------------------------------------------------
+    let clockFreq = 4;
+    let bcdValue = 0;
+    let lastClockTick = 0;
+
+    function updateClockFrequency(val) {
+      clockFreq = parseInt(val, 10);
+      document.getElementById('clk-freq-readout').textContent = `${clockFreq} Hz`;
+    }
+
+    function initOscilloscope() {
+      const canvas = document.getElementById('scope-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = canvas.clientWidth * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      ctx.scale(dpr, dpr);
+
+      const channels = [
+        { label: 'CLK', color: '#facc15' },
+        { label: 'Q0', color: '#38bdf8' },
+        { label: 'Q1', color: '#fb7185' },
+        { label: 'Q2', color: '#34d399' },
+        { label: 'Q3', color: '#c084fc' }
+      ];
+
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const chHeight = h / channels.length;
+
+      let history = [];
+      const maxSamples = 240;
+
+      function drawScope(now) {
+        // Clock tick logic
+        const interval = 1000 / clockFreq;
+        if (now - lastClockTick >= interval) {
+          lastClockTick = now;
+          bcdValue = (bcdValue + 1) % 10;
+          document.getElementById('seven-seg-digit').textContent = bcdValue;
+          const binStr = (bcdValue >>> 0).toString(2).padStart(4, '0');
+          document.getElementById('bcd-count-binary').textContent = `Q3..Q0 = ${binStr}`;
+        }
+
+        // Generate sample from current time
+        const phase = (now / (1000 / clockFreq)) % 1;
+        const clkBit = phase < 0.5 ? 1 : 0;
+        const q0 = bcdValue & 1;
+        const q1 = (bcdValue >> 1) & 1;
+        const q2 = (bcdValue >> 2) & 1;
+        const q3 = (bcdValue >> 3) & 1;
+
+        history.push([clkBit, q0, q1, q2, q3]);
+        if (history.length > maxSamples) history.shift();
+
+        // Render grid
+        ctx.fillStyle = '#060a12';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 0.5;
+        for (let y = 0; y < h; y += 20) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+        for (let x = 0; x < w; x += 30) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+
+        // Draw each channel waveform
+        channels.forEach((ch, chIdx) => {
+          const baseY = (chIdx + 1) * chHeight - 8;
+          const amp = chHeight * 0.55;
+
+          ctx.fillStyle = ch.color;
+          ctx.font = '10px ui-monospace, "SF Mono", monospace';
+          ctx.fillText(ch.label, 8, baseY - amp / 2 + 3);
+
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+
+          for (let i = 0; i < history.length; i++) {
+            const x = (i / maxSamples) * (w - 45) + 40;
+            const bit = history[i][chIdx];
+            const y = bit === 1 ? baseY - amp : baseY;
+
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              const prevBit = history[i - 1][chIdx];
+              const prevY = prevBit === 1 ? baseY - amp : baseY;
+              if (prevBit !== bit) {
+                ctx.lineTo(x, prevY);
+              }
+              ctx.lineTo(x, y);
+            }
+          }
+          ctx.stroke();
+        });
+
+        requestAnimationFrame(drawScope);
+      }
+
+      requestAnimationFrame(drawScope);
+    }
+
+    // ------------------------------------------------------------------------
+    // 5. IN-PAGE SIMULATOR MODAL LAUNCHER & URL PRESET ROUTER
+    // ------------------------------------------------------------------------
+    function launchTrainerKit() {
+      launchTrainerKitWithPreset('exp_gates');
+    }
+
+    function launchTrainerKitWithPreset(presetId) {
+      const modal = document.getElementById('dd-simulator-modal');
+      const iframe = document.getElementById('simulator-iframe');
+      const newTabBtn = document.getElementById('btn-open-new-tab');
+      const titleSpan = document.getElementById('simulator-modal-title');
+
+      const targetUrl = `physitech_phy_1002_simulator_fixed.html?preset=${presetId}`;
+      iframe.src = targetUrl;
+      newTabBtn.href = targetUrl;
+      titleSpan.textContent = `PHYSITECH PHY-1002 // PRESET: ${presetId.toUpperCase()}`;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSimulatorModal() {
+      const modal = document.getElementById('dd-simulator-modal');
+      const iframe = document.getElementById('simulator-iframe');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      iframe.src = '';
+      document.body.style.overflow = '';
+    }
+
+    // Keyboard shortcut: Cmd+Enter or Ctrl+Enter launches simulator
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        const modal = document.getElementById('dd-simulator-modal');
+        if (modal.classList.contains('hidden')) {
+          launchTrainerKit();
+        } else {
+          closeSimulatorModal();
+        }
+      }
+      if (e.key === 'Escape') {
+        closeSimulatorModal();
+      }
+    });
+
+    // ------------------------------------------------------------------------
+    // 6. INSTANTANEOUS INITIALIZATION
+    // ------------------------------------------------------------------------
+    function bootSimulatorUI() {
+      // 1. Mount WebGL abstract liquid sculpture shader immediately
+      const shaderCanvas = document.getElementById('dd-liquid-shader-canvas');
+      if (shaderCanvas && !shaderCanvas._initialized) {
+        shaderCanvas._initialized = true;
+        initAbstractLiquidSculpture(shaderCanvas);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', bootSimulatorUI);
+      window.addEventListener('load', bootSimulatorUI);
+    } else {
+      bootSimulatorUI();
+    }
+
+    window.addEventListener('load', () => {
+
+      // 2. Initialize interactive half-adder circuit
+      updateCircuitUI();
+
+      // 3. Render X-Ray DIP pin inspector
+      renderXrayPins();
+
+      // 4. Start oscilloscope canvas
+      initOscilloscope();
+
+      // 5. Connect feature pill buttons
+      document.querySelectorAll('.dd-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.dd-pill-btn').forEach(b => {
+            b.className = 'dd-pill-btn px-4 py-1.5 rounded-full text-xs font-medium border border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white hover:border-neutral-700 transition';
+            b.classList.add('text-slate-300');
+          });
+          btn.className = 'dd-pill-btn active px-4 py-1.5 rounded-full text-xs font-semibold border border-white bg-white text-black shadow-sm transition';
+          btn.classList.remove('text-slate-300');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
