@@ -1,5 +1,6 @@
 # Development scratch and inspection files
 scratch/
+*.pre-redesign.html
 
 # Agent skills cache
 .agent/
