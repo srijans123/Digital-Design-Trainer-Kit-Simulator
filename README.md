@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Assets/pixel/banner.svg" alt="Digital Design Trainer Kit Simulator: Physitech PHY-1002" width="100%">
+<img src="Assets/pixel/banner.svg" alt="Digital Design Trainer Kit Simulator: Digital Design Trainer Kit" width="100%">
 
 <br>
 
@@ -42,7 +42,7 @@
 
 Real digital labs come with real problems: loose patch cords, a 7474 that gave its life for your grade, and a breadboard that worked *five minutes ago*.
 
-This repo is a **browser-based, pin-accurate simulator of the Physitech PHY-1002 Universal Digital Lab Trainer Kit**, built for the **BITS Pilani, Hyderabad Campus** Digital Design course (`CS F215 / ECE F215 / EEE F215 / INSTR F215`). Rehearse every experiment from the [course handout](https://www.scribd.com/document/1054436513/Cs-f215-Digital-Design-Handout) before you ever touch hardware.
+This repo is a **browser-based, pin-accurate simulator of the Digital Design Trainer Kit Universal Digital Lab Trainer Kit**, built for the **BITS Pilani, Hyderabad Campus** Digital Design course (`CS F215 / ECE F215 / EEE F215 / INSTR F215`). Rehearse every experiment from the [course handout](https://www.scribd.com/document/1054436513/Cs-f215-Digital-Design-Handout) before you ever touch hardware.
 
 <table>
 <tr>
@@ -51,7 +51,7 @@ This repo is a **browser-based, pin-accurate simulator of the Physitech PHY-1002
 </tr>
 <tr>
 <td align="center"><img src="Assets/pixel/switch.svg" width="48" alt=""></td>
-<td><b>Physical kit accuracy.</b> The dual-board layout, breadboard turret sockets, toggle input switches, LED monitors and 7-segment decoders of the real PHY-1002.</td>
+<td><b>Physical kit accuracy.</b> The dual-board layout, breadboard turret sockets, toggle input switches, LED monitors and 7-segment decoders of the real Digital Design Trainer.</td>
 </tr>
 </table>
 
@@ -174,7 +174,7 @@ flowchart LR
 ### Simulation Methodology & Engine Architecture
 
 1. **Topological Pin Graph Network**
-   Every breadboard turret socket and IC pin on the dual-board Physitech PHY-1002 represents an addressable graph node. Jumper wires create bidirectional net edges. Connecting an input socket to an output or power rail binds them into a unified electrical net.
+   Every breadboard turret socket and IC pin on the dual-board Digital Design Trainer Kit represents an addressable graph node. Jumper wires create bidirectional net edges. Connecting an input socket to an output or power rail binds them into a unified electrical net.
 
 2. **Discrete TTL IC Behavioral Engine**
    ICs are not static lookup tables; each chip evaluates discrete Boolean gate transfer functions matching Texas Instruments / standard TTL specifications:
@@ -203,7 +203,7 @@ cd Digital-Design-Trainer-Kit-Simulator
 
 # 2. open it
 #    index.html                                -> landing page with the WebGL wave shader
-#    physitech_phy_1002_simulator_fixed.html   -> straight into the simulator
+#    simulator.html                            -> straight into the simulator
 ```
 
 Prefer a local server? Any static one works:
@@ -231,7 +231,7 @@ Digital-Design-Trainer-Kit-Simulator/
 │   └── trainer-kit-pcb-macro.jpg
 ├── public/assets/
 ├── index.html                               # landing page with WebGL 3D wave shader
-├── physitech_phy_1002_simulator_fixed.html  # the full PHY-1002 trainer kit simulator
+├── simulator.html                           # the full Digital Design trainer kit simulator
 ├── .gitignore
 └── README.md
 ```
@@ -254,7 +254,7 @@ No. It is plain HTML, CSS and JavaScript. Open the file and go.
 <details>
 <summary><b>Is it accurate to the real kit?</b></summary>
 <br>
-It is a pin-accurate simulation of the PHY-1002 layout and the 74-series ICs listed above. Use it to rehearse, then confirm on the real hardware in the lab.
+It is a pin-accurate simulation of the Digital Design Trainer layout and the 74-series ICs listed above. Use it to rehearse, then confirm on the real hardware in the lab.
 </details>
 
 <details>
@@ -287,6 +287,6 @@ MIT License. Designed for academic and educational use for the BITS Pilani Digit
 
 <img src="Assets/pixel/heart.svg" width="32" align="absmiddle" alt=""> &nbsp;Built for the BITS Pilani Digital Design lab
 
-<sub>Unofficial project. Physitech and BITS Pilani names are used only to describe compatibility with the course lab.</sub>
+<sub>Designed for the BITS Pilani Digital Design lab curriculum.</sub>
 
 </div>
